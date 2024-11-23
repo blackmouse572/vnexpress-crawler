@@ -1,10 +1,11 @@
 import { createPuppeteerRouter } from 'crawlee';
+import { NodeHtmlMarkdown } from 'node-html-markdown';
 import { NewsDocument } from './database/news.schema.js';
 
 export const router = createPuppeteerRouter();
 
 router.addDefaultHandler(async ({ enqueueLinks, page, log }) => {
-    log.info(`enqueueing new URLs`);
+    log.info(`Enqueueing new URLs: ${page.url()}`);
     await page.waitForSelector('#isArticleTax');
 
     await enqueueLinks({
@@ -25,12 +26,20 @@ router.addHandler('detail', async ({ request, page, log }) => {
     log.info(`Get details: ${title}`, { url: request.loadedUrl });
     const labelNode = await page.$('h1.title-detail');
     const descriptionNode = await page.$('p.description');
+    const detailNode = await page.$('article.fck_detail');
+
     const label = await labelNode?.evaluate((e) => e.innerText);
     const description = await descriptionNode?.evaluate((e) => e.innerText);
+    const detail = await detailNode
+        ?.evaluate((e) => e.innerHTML)
+        .then((html) => {
+            return NodeHtmlMarkdown.translate(html);
+        });
+
     const dataset = new NewsDocument({
         title,
         label,
-        description,
+        description: [description, detail].join('\n'),
         url: request.loadedUrl,
     });
 
@@ -46,6 +55,6 @@ router.addHandler('detail', async ({ request, page, log }) => {
             if (err.code !== 11000) {
                 throw err;
             }
-            log.info(`URL already saved: ${title}`, { url: request.loadedUrl });
+            log.info(`URL already saved: ${title}`);
         });
 });
