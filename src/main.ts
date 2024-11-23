@@ -17,15 +17,19 @@ const { startUrls = ['https://vnexpress.net/chu-de/hoc-bong-2228'], mongoUrl } =
 // await initDb(mongoUrl);
 
 // Create a proxy configuration that will rotate proxies from Apify Proxy.
-const proxyConfiguration = await Actor.createProxyConfiguration({
-    countryCode: 'VN',
-});
+const proxyConfiguration = await Actor.createProxyConfiguration({});
 
 // Create a PuppeteerCrawler that will use the proxy configuration and and handle requests with the router from routes.ts file.
 const crawler = new PuppeteerCrawler({
     proxyConfiguration,
     requestHandler: router,
     maxRequestsPerMinute: 60,
+    retryOnBlocked: true,
+    errorHandler: async ({ request, error }) => {
+        console.log(
+            `Request ${request.url} failed too many times. Error: ${error}`
+        );
+    },
 });
 
 // Run the crawler with the start URLs and wait for it to finish.
