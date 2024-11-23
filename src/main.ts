@@ -18,7 +18,6 @@ const { startUrls = ['https://vnexpress.net/chu-de/hoc-bong-2228'], mongoUrl } =
 
 // Create a proxy configuration that will rotate proxies from Apify Proxy.
 const proxyConfiguration = await Actor.createProxyConfiguration({
-    apifyProxyCountry: 'VN',
     countryCode: 'VN',
 });
 
