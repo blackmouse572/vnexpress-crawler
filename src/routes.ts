@@ -1,5 +1,4 @@
 import { createPuppeteerRouter, Dataset } from 'crawlee';
-import { NodeHtmlMarkdown } from 'node-html-markdown';
 
 export const router = createPuppeteerRouter();
 
@@ -32,7 +31,7 @@ router.addHandler('detail', async ({ request, page, log }) => {
     const detail = await detailNode
         ?.evaluate((e) => e.innerHTML)
         .then((html) => {
-            return NodeHtmlMarkdown.translate(html);
+            return html.replace(/<[^>]*>?/gm, '');
         });
     await Dataset.pushData({
         title,

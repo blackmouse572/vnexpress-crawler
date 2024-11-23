@@ -23,13 +23,8 @@ const proxyConfiguration = await Actor.createProxyConfiguration({});
 const crawler = new PuppeteerCrawler({
     proxyConfiguration,
     requestHandler: router,
-    maxRequestsPerMinute: 60,
+    maxRequestsPerCrawl: 3,
     retryOnBlocked: true,
-    errorHandler: async ({ request, error }) => {
-        console.log(
-            `Request ${request.url} failed too many times. Error: ${error}`
-        );
-    },
 });
 
 // Run the crawler with the start URLs and wait for it to finish.
