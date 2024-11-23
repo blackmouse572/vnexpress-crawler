@@ -30,7 +30,7 @@ router.addHandler('detail', async ({ request, page, log }) => {
 
         const label = await labelNode?.evaluate((e) => e.innerText);
         const description = await descriptionNode?.evaluate((e) => e.innerText);
-        const detail = await detailNode?.evaluate((e) => e.textContent ?? '');
+        const detail = await detailNode?.evaluate((e) => e.innerHTML || '');
         await Dataset.pushData({
             title,
             label,
