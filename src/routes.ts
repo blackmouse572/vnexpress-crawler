@@ -1,6 +1,5 @@
-import { createPuppeteerRouter } from 'crawlee';
+import { createPuppeteerRouter, Dataset } from 'crawlee';
 import { NodeHtmlMarkdown } from 'node-html-markdown';
-import { NewsDocument } from './database/news.schema.js';
 
 export const router = createPuppeteerRouter();
 
@@ -35,26 +34,31 @@ router.addHandler('detail', async ({ request, page, log }) => {
         .then((html) => {
             return NodeHtmlMarkdown.translate(html);
         });
-
-    const dataset = new NewsDocument({
+    await Dataset.pushData({
         title,
         label,
         description: [description, detail].join('\n'),
         url: request.loadedUrl,
     });
+    // const dataset = new NewsDocument({
+    //     title,
+    //     label,
+    //     description: [description, detail].join('\n'),
+    //     url: request.loadedUrl,
+    // });
 
-    await dataset
-        .save({})
-        .then((e) => {
-            if (!e.errors) {
-                log.info(`Saved: ${title}`, { url: request.loadedUrl });
-            }
-        })
-        .catch((err) => {
-            // if the URL is already saved, we can ignore the error
-            if (err.code !== 11000) {
-                throw err;
-            }
-            log.info(`URL already saved: ${title}`);
-        });
+    // await dataset
+    //     .save({})
+    //     .then((e) => {
+    //         if (!e.errors) {
+    //             log.info(`Saved: ${title}`, { url: request.loadedUrl });
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         // if the URL is already saved, we can ignore the error
+    //         if (err.code !== 11000) {
+    //             throw err;
+    //         }
+    //         log.info(`URL already saved: ${title}`);
+    //     });
 });
