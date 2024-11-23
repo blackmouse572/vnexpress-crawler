@@ -1,0 +1,25 @@
+{
+    "title": "PuppeteerCrawler Template",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "URLs to start with.",
+            "editor": "requestListSources",
+            "prefill": [
+                {
+                    "url": "https://apify.com"
+                }
+            ]
+        },
+        "mongoUrl": {
+            "title": "Mongo URL",
+            "type": "string",
+            "description": "MongoDB connection string. If not provided, it will use env.MONGO_URL.",
+            "editor": "input",
+            "prefill": "https://apify.com"
+        }
+    }
+}
