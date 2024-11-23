@@ -1,12 +1,9 @@
 {
     "actorSpecification": 1,
-    "name": "my-actor",
-    "title": "Project Puppeteer Crawler Typescript",
-    "description": "Crawlee and Puppeteer project in typescript.",
+    "name": "VNExpress Crawler",
+    "title": "VNExpress News Crawler",
+    "description": "This actor crawls news from VNExpress",
     "version": "0.0",
-    "meta": {
-        "templateId": "ts-crawlee-puppeteer-chrome"
-    },
     "input": "./input_schema.json",
     "dockerfile": "./Dockerfile"
 }
