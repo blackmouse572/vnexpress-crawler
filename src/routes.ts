@@ -30,11 +30,7 @@ router.addHandler('detail', async ({ request, page, log }) => {
 
         const label = await labelNode?.evaluate((e) => e.innerText);
         const description = await descriptionNode?.evaluate((e) => e.innerText);
-        const detail = await detailNode
-            ?.evaluate((e) => e.innerHTML)
-            .then((html) => {
-                return html.replace(/<[^>]*>?/gm, '');
-            });
+        const detail = await detailNode?.evaluate((e) => e.textContent ?? '');
         await Dataset.pushData({
             title,
             label,
@@ -58,11 +54,13 @@ router.addHandler('detail', async ({ request, page, log }) => {
             .catch((err) => {
                 // if the URL is already saved, we can ignore the error
                 if (err.code !== 11000) {
+                    console.log('Error of saving URL:', err);
                     throw err;
                 }
                 log.info(`URL already saved: ${title}`);
             });
     } catch (error) {
+        console.error('Error:', error);
         log.error('Error:', error as Error);
     }
 });
