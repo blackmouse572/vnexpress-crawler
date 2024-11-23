@@ -18,7 +18,7 @@
             "title": "Mongo URL",
             "type": "string",
             "description": "MongoDB connection string. If not provided, it will use env.MONGO_URL.",
-            "editor": "input",
+            "editor": "textfield",
             "prefill": "https://apify.com"
         }
     }
