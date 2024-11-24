@@ -10,6 +10,7 @@ router.addDefaultHandler(async ({ enqueueLinks, page, log }) => {
     await enqueueLinks({
         selector: '#list-news > article > h3 > a',
         label: 'detail',
+        userData: {},
     });
 
     const nextButton = await page.$('a.btn-page.next-page');
@@ -27,21 +28,29 @@ router.addHandler('detail', async ({ request, page, log }) => {
         const labelNode = await page.$('h1.title-detail');
         const descriptionNode = await page.$('p.description');
         const detailNode = await page.$('article.fck_detail');
+        const heroImageNode = await page.$(
+            'picture img[itemprop="contentUrl"]'
+        );
 
         const label = await labelNode?.evaluate((e) => e.innerText);
         const description = await descriptionNode?.evaluate((e) => e.innerText);
         const detail = await detailNode?.evaluate((e) => e.innerHTML || '');
+        const heroImage = await heroImageNode?.evaluate((e) =>
+            e.getAttribute('src')
+        );
         await Dataset.pushData({
             title,
             label,
             description: [description, detail].join('\n'),
             url: request.loadedUrl,
+            heroImage,
         });
         const dataset = new NewsDocument({
             title,
             label,
             description: [description, detail].join('\n'),
             url: request.loadedUrl,
+            heroImage,
         });
 
         await dataset

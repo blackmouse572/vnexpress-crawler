@@ -7,6 +7,7 @@ const NewsSchema = new Schema(
         title: String,
         url: { type: String, unique: true },
         label: String,
+        heroImage: { type: String, default: '' },
         description: String,
     },
     {
